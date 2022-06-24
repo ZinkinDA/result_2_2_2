@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CARS</title>
+</head>
+<body>
+    <div class = "container" th:with="intList =${ {1,2,3,4,5}}">
+        <div class = "row mt-4 mb-4">
+            <a th:each="x : ${intList}" th:href="@{/cars(count =${x})}" th:text="|&#160;&{x}&#160;|"/>
+            <a th:href="@{/cars}" th:text = "All"/>
+        </div>
+    </div>
+
+    <div class = "container">
+        <div class = "row align-items-center">
+            <div th:each="car : &{cars}" class="card mb-2 mr-2">
+
+            </div>
+        </div>
+    </div>
+
+
+
+</body>
+</html>
