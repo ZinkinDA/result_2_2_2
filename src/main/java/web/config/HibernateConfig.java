@@ -14,6 +14,8 @@ import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
+
 import javax.sql.DataSource;
 import java.util.Properties;
 
@@ -22,14 +24,15 @@ import javax.sql.DataSource;
 @Component
 @Configuration
 @PropertySource(value = "classpath:db.properties")
+@EnableTransactionManagement
 @ComponentScan(value = "web")
 public class HibernateConfig {
-    @Autowired
-    private Environment environment;
+    private final Environment environment;
 
     public HibernateConfig(Environment environment) {
         this.environment = environment;
     }
+
 
     private HibernateJpaVendorAdapter vendorAdapter() {
         HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
@@ -54,7 +57,7 @@ public class HibernateConfig {
         props.put("hibernate.dialect", environment.getProperty("hibernate.dialect"));
 
         LocalContainerEntityManagerFactoryBean factoryBean = new LocalContainerEntityManagerFactoryBean();
-        factoryBean.setJpaVendorAdapter(vendorAdapter()); //??
+        factoryBean.setJpaVendorAdapter(vendorAdapter());
         factoryBean.setDataSource(dataSource());
         factoryBean.setJpaProperties(props);
         factoryBean.setPersistenceProviderClass(HibernatePersistenceProvider.class);

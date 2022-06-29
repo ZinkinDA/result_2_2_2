@@ -2,6 +2,7 @@ package web.dao;
 
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 import web.model.User;
 
 import javax.persistence.EntityManager;
@@ -27,13 +28,14 @@ public class UserDaoImpl implements UserDao{
 
     @Override
     public User getUserIndex(int index) {
-        return users.stream().filter(user -> user.getId() == index).findAny().orElse(null);
+        return entityManager.find(User.class,index);
     }
 
     @Override
     public void saveUser(User user) {
         user.setId(++USER_ID);
-        users.add(user);
+        entityManager.persist(user);
+        entityManager.getTransaction().commit();
     }
 
     @Override
