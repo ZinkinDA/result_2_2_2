@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.sql.DataSource;
+import java.util.Objects;
 import java.util.Properties;
 
 import javax.sql.DataSource;
@@ -28,7 +29,7 @@ import javax.sql.DataSource;
 @ComponentScan(value = "web")
 public class HibernateConfig {
     private final Environment environment;
-
+    @Autowired
     public HibernateConfig(Environment environment) {
         this.environment = environment;
     }
@@ -36,20 +37,19 @@ public class HibernateConfig {
 
     private HibernateJpaVendorAdapter vendorAdapter() {
         HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
-        vendorAdapter.setShowSql(true);
         return vendorAdapter;
     }
     @Bean
     public DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName(environment.getProperty("db.driver"));
+        dataSource.setDriverClassName(Objects.requireNonNull(environment.getRequiredProperty("db.driver")));
         dataSource.setUrl(environment.getProperty("db.url"));
         dataSource.setUsername(environment.getProperty("db.username"));
         dataSource.setPassword(environment.getProperty("db.password"));
         return dataSource;
     }
 
-    @Bean()
+    @Bean
     public LocalContainerEntityManagerFactoryBean getEntityManagerFactory() {
         Properties props = new Properties();
         props.put("hibernate.show_sql", environment.getProperty("hibernate.show_sql"));

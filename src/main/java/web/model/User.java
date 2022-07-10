@@ -1,15 +1,15 @@
 package web.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import org.hibernate.annotations.Cascade;
+
+import javax.persistence.*;
 
 @Entity
 @Table(name = "users")
 public class User {
 
     @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Id
     int id;
     @Column(name = "name")
@@ -24,6 +24,10 @@ public class User {
         this.name = name;
         this.surName = surName;
     }
+//    public User(String name,String surName){
+//        this.name = name;
+//        this.surName = surName;
+//    }
 
     public int getId() {
         return id;

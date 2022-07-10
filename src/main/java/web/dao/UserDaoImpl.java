@@ -1,25 +1,28 @@
 package web.dao;
 
+import org.hibernate.annotations.ResultCheckStyle;
+import org.hibernate.annotations.SQLDelete;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import web.model.User;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NamedNativeQuery;
 import javax.persistence.PersistenceContext;
+import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.List;
 
 @Component
 public class UserDaoImpl implements UserDao{
 
-    private List<User> users;
+    int ID = 1;
 
     @PersistenceContext
     EntityManager entityManager;
 
-    
-    private static int USER_ID = 0;
 
     @Override
     public List<User> getUserAll() {
@@ -32,31 +35,23 @@ public class UserDaoImpl implements UserDao{
     }
 
     @Override
+    @Transactional
     public void saveUser(User user) {
-        user.setId(++USER_ID);
         entityManager.persist(user);
-        entityManager.getTransaction().commit();
     }
 
     @Override
+    @Transactional
     public void updateUser(int id,User user){
-        User updatedUser = getUserIndex(id);
-        updatedUser.setName(user.getName());
-        updatedUser.setSurName(user.getSurName());
+        entityManager.createNativeQuery("update testdb.users set name = '" + user.getName() + "',surname = '" + user.getSurName() +"' where id =" + id + ";").executeUpdate();
     }
 
     @Override
+    @Transactional
     public void deleteUser(int id) {
-        users.removeIf(x -> x.getId() == id);
-    }
-
-    {
-        users = new ArrayList<>();
-
-        users.add(new User(++USER_ID,"Dmitry","Zinkin"));
-        users.add(new User(++USER_ID,"Alexey","Zinkin"));
-        users.add(new User(++USER_ID,"Olga","Zinkina"));
+        entityManager.remove(getUserIndex(id));
 
     }
+
 
 }

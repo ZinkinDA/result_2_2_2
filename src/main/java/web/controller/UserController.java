@@ -49,13 +49,13 @@ public class UserController {
         return "/update";
     }
 
-    @PostMapping("/{index}")
+    @PostMapping ("/{index}")
     public String update(@ModelAttribute("user") User user,@PathVariable("index") int id){
         userService.updateUser(id,user);
         return "redirect:/";
     }
 
-    @DeleteMapping("/{index}")
+    @RequestMapping(value = "/{index}",method = RequestMethod.DELETE)
     public String delete(@PathVariable("index") int id){
         userService.deleteUser(id);
         return "redirect:/";
